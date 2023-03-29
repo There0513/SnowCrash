@@ -1,0 +1,46 @@
+1/ We need to exploit directly /bin/getflag since there is no other binary in the home directory.
+
+2/ First we need to get the UID of the user flag14 (which is 3014 in decimal) and convert it to hexadecimal value:
+level14@SnowCrash:~$ printf "%x" $(id -u flag14)
+bc6
+
+3/ We use objdump to find where the program checks the UID of the current user and compare it to the UID of flag14:
+level14@SnowCrash:objdump -D /bin/getflag | grep -A1 "bc6"
+ 8048b46:    74 7e                    je     8048bc6 <main+0x280>
+ 8048b48:    e9 b9 02 00 00           jmp    8048e06 <main+0x4c0>
+--
+ 8048bb6:    3d c6 0b 00 00           cmp    $0xbc6,%eax
+ 8048bbb:    0f 84 24 02 00 00        je     8048de5 <main+0x49f>
+--
+ 8048bc6:    a1 60 b0 04 08           mov    0x804b060,%eax
+ 8048bcb:    89 c2                    mov    %eax,%edx
+
+4/ Now we know we can jump directly to the address 0x08048de5 to display the token:
+
+level14@SnowCrash:~$ gdb /bin/getflag
+GNU gdb (Ubuntu/Linaro 7.4-2012.04-0ubuntu2.1) 7.4-2012.04
+(gdb) b main
+Breakpoint 2 at 0x804894a
+
+>> Breakpoint to avoid to run into ptrace straight from start.
+
+(gdb) run
+Starting program: /bin/getflag 
+
+Breakpoint 2, 0x0804894a in main ()
+(gdb) jump *0x8048de5
+Continuing at 0x8048de5.
+
+Breakpoint 1, 0x08048de5 in main ()
+(gdb) next
+Single stepping until exit from function main,
+which has no line number information.
+7QiHafiNa3HVozsaXkawuYrTstxbpABHD8CPnHJ
+
+
+5/ level14@SnowCrash:~$ su flag14
+Password: 
+Congratulation. Type getflag to get the key and send it to me the owner of this livecd :)
+flag14@SnowCrash:~$ getflag
+Check flag.Here is your token : 7QiHafiNa3HVozsaXkawuYrTstxbpABHD8CPnHJ
+flag14@SnowCrash:~$ 

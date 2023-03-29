@@ -1,0 +1,11 @@
+1/ ls -la => Same configuration as in level08: level09 binary with SUID rights and a readable token file.
+
+2/ We try a few things with the binary:
+./level09 aaaaaaa
+abcdefg
+
+We understand that the binary shifts the chars in the argument by their index value in the argument.
+
+3/ level09@SnowCrash:~$ gcc solve.c &&
+./a.out `cat token`
+f3iji1ju5yuevaus41q1afiuq

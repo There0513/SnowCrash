@@ -1,0 +1,23 @@
+1/ ls -la
+=> level02.pcap
+
+2/ scp -P 4242 level02@localhost:~/level02.pcap .
+
+3/ https://www.solarwinds.com/resources/it-glossary/pcap
+What is Packet Capture (PCAP)?
+Packet capture is a networking practice involving the interception of data packets travelling over a network.
+What is a PCAP file?
+PCAP files are data files created using a program. These files contain packet data of a network and are used to analyze the network characteristics. They also contribute to controlling the network traffic and determining network status. Using PCAP files, teams can attend to detect network problems and resolve data communications using various programs.
+
+4/ Install Wireshark dans la VM: 
+sudo apt install wireshark-qt
+
+5/ Menu Analyze > Follow > TCP Stream
+Switch from ASCII view to Hexdump view
+"ft_wandr...NDRel.L0L"
+
+6/ We see that the ... in the hexdump have a value of 7F => "DEL"
+=>> ft_waNDReL0L
+su flag02 / ft_waNDReL0L
+flag02@SnowCrash:~$ getflag
+Check flag.Here is your token : kooda2puivaav1idi4f57q8iq

