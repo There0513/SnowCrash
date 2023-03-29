@@ -1,6 +1,6 @@
 # SnowCrash
 
-This project is a modest introduction to the wide world of cyber security. A world where you’ll have no margin for errors.
+This project is a modest introduction to the wide world of cyber security.
 
 
 This project made me discover, through several little challenges, cyber security in various fields.
