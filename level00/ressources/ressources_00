@@ -1,10 +1,12 @@
 1/ https://www.cyberciti.biz/faq/how-do-i-find-all-the-files-owned-by-a-particular-user-or-group/
 in level00@SnowCrash:/$ find / -group flag00 2>/dev/null
 /usr/sbin/john == “cdiiddwpgswtgt”
+
 2/ https://www.cachesleuth.com/multidecoder/
 Caesar Cipher - Automatic Solver
 Rot 15 (11)
 decipher = "nottoohardhere"
+
 3/ su flag00
 getflag
 token: x24ti5gi3x0ol2eh4esiuxias (-> su level01)
