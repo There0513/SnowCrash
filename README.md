@@ -1,2 +1,3 @@
 # SnowCrash
-This project will be an introduction to cyber security.
+
+This project is a modest introduction to the wide world of cyber security. A world
